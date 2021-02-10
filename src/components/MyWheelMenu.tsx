@@ -1,6 +1,8 @@
 import React from "react";
 import { PieChart } from "react-minimal-pie-chart";
+import { DataEntry } from "react-minimal-pie-chart/types/commonTypes";
 import { PIE_CHART_DATA as PieChartData } from "../constants/testData"
+import { WheelMenuOption } from "../models/WheelMenuOption";
 
 /********************************************************
  * Class Goals
@@ -12,25 +14,34 @@ import { PIE_CHART_DATA as PieChartData } from "../constants/testData"
  ********************************************************/
 
 interface WheelMenuProps {
-    options: any, //decide on class implementation
-    maxOuterOptions: number,
+    options: WheelMenuOption[],
+    innerHoleCoverage: number,
 }
 
 const defaultProps: WheelMenuProps = {
     options: PieChartData,
-    maxOuterOptions: 4,
+    innerHoleCoverage: 50,
 }
 
 export const MyWheelMenu = (props: WheelMenuProps) => {
+    const outerData: DataEntry[] = [];
+    const lineWidth: number = Math.max(100 - props.innerHoleCoverage, 0);
+
+    props.options
+        .filter(opt => opt.onOuterWheel)
+        .forEach(opt => outerData.push(opt.ToDataEntry()));
+
     return (
         <PieChart
-            data={props.options}
-            label={({ dataEntry }) => dataEntry.value }
-            labelPosition={65}
+            data={outerData}
+            label={({ dataEntry }) => dataEntry.title }
+            labelStyle={{ fontSize: 3 }}
+            labelPosition={100 - lineWidth/2}
             startAngle={320}
-            lineWidth={50}
-            radius={25}
-            center={[25, 25]}
+            lineWidth={lineWidth}
+            //probably will remove these as it is only based on viewBoxSize not actual size
+            radius={25} //<-
+            center={[25, 25]} //<-
         />
     );
 }
