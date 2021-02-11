@@ -39,9 +39,6 @@ export const MyWheelMenu = (props: WheelMenuProps) => {
             labelPosition={100 - lineWidth/2}
             startAngle={320}
             lineWidth={lineWidth}
-            //probably will remove these as it is only based on viewBoxSize not actual size
-            radius={25} //<-
-            center={[25, 25]} //<-
         />
     );
 }
