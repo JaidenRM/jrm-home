@@ -13,17 +13,17 @@ import { WheelMenuOption } from "../models/WheelMenuOption";
  *  - z = x + y
  ********************************************************/
 
-interface WheelMenuProps {
+interface IWheelMenuProps {
     options: WheelMenuOption[],
     innerHoleCoverage: number,
 }
 
-const defaultProps: WheelMenuProps = {
+const defaultProps: IWheelMenuProps = {
     options: PieChartData,
     innerHoleCoverage: 50,
 }
 
-export const MyWheelMenu = (props: WheelMenuProps) => {
+export const MyWheelMenu = (props: IWheelMenuProps) => {
     const outerData: DataEntry[] = [];
     const lineWidth: number = Math.max(100 - props.innerHoleCoverage, 0);
 
