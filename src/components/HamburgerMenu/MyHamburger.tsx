@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const StyledBurger = styled.button`
-    
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -12,6 +11,7 @@ const StyledBurger = styled.button`
     cursor: pointer;
     padding: 0;
     z-index: 10;
+    transform: scale(${ props => props.size ?? 1});
     
     &:focus {
         outline: none;
@@ -20,7 +20,7 @@ const StyledBurger = styled.button`
     div {
         width: 2rem;
         height: 0.25rem;
-        background: ${(props) => props.isOpen ? props.theme.primaryLight : props.theme.primaryDark };
+        background: ${({theme}) => theme.primaryDark };
         border-radius: 10px;
         transition: all 0.3s linear;
         position: relative;
@@ -43,7 +43,8 @@ const StyledBurger = styled.button`
 
 interface IHamburgerProps {
     isOpen: boolean,
-    setIsOpen: (isOpen: boolean) => void
+    setIsOpen: (isOpen: boolean) => void,
+    size?: number
 }
 
 export const MyHamburger = (props: IHamburgerProps) => {

@@ -39,20 +39,19 @@ const StyledDiv = styled.div`
 `;
 
 export const MyWheelMenu = (props: IWheelMenuProps) => {
-    const outerData: DataEntry[] = [];
     const lineWidth: number = Math.max(100 - props.innerHoleCoverage, 0);
-
-    props.options
-        .filter(opt => opt.onOuterWheel)
-        .forEach(opt => outerData.push(opt.ToDataEntry()));
 
     return (
         <StyledDiv>
-            
-                <MyHamburgerMenu/>
-            
+            <MyHamburgerMenu
+                options={props.options.filter(opt => !opt.onOuterWheel)}            
+            />
             <PieChart
-                data={outerData}
+                data={
+                    props.options
+                        .filter(opt => opt.onOuterWheel)
+                        .map(opt => opt.ToDataEntry())
+                }
                 label={({ dataEntry }) => dataEntry.title }
                 labelStyle={{ fontSize: 3 }}
                 labelPosition={100 - lineWidth/2}

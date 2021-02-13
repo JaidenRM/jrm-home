@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { WheelMenuOption } from '../../models/WheelMenuOption';
 
 const StyledMenu = styled.nav`
     display: flex;
@@ -39,64 +40,26 @@ const StyledMenu = styled.nav`
     }
 `;
 
-const ControllerDiv = styled.div<IMenuProps>`
-    background-color: white;
-    padding: 1rem 2rem;
-    margin: 0 auto;
-    position: absolute;
-    left: ${props => props.isOpen ? '-5rem' : 'calc(50% - 3rem)'};
-    top: calc(50% - 2rem);
-    transition: color 0.3s linear;
-`;
-
-const MenuOptions: React.ReactNode[] = [
-    <a href="/">
-        <span role="img" aria-label="about us">&#x1f481;&#x1f3fb;&#x200d;&#x2642;&#xfe0f;</span>
-        About us
-    </a>,
-    <a href="/">
-        <span role="img" aria-label="price">&#x1f4b8;</span>
-        Pricing
-    </a>,
-    <a href="/">
-        <span role="img" aria-label="contact">&#x1f4e9;</span>
-        Contact
-    </a>
-]
-
 interface IMenuProps {
     isOpen: boolean,
-    controller: React.ReactNode
+    menuOptions: WheelMenuOption[]
 }
-
-// function RenderMenu(menuItems: React.ReactNode[], controller: React.ReactNode): React.ReactNode[] {
-//     const halfway = menuItems.length / 2;
-//     const middleElement = 
-//         <ControllerDiv>
-//             {controller}
-//         </ControllerDiv>;
-
-//     menuItems.splice(halfway, 0, middleElement);
-//     return menuItems;
-
-// }
 
 export const MySideMenu = (props: IMenuProps) => {    
     return (
-        <>
-            {
-                props.isOpen ? <>
-                    <ControllerDiv {...props}>
-                        {props.controller}
-                    </ControllerDiv>
-                    <StyledMenu {...props}>
-                        {MenuOptions}
-                    </StyledMenu></>
-                :
-                    <ControllerDiv {...props}>
-                        {props.controller}
-                    </ControllerDiv>
-            }
-        </>
+        props.isOpen 
+        ? 
+            <StyledMenu {...props}>
+                {props.menuOptions.map(opt => {
+                    return (
+                        <a href="/">
+                            <span role="img" aria-label="about us">&#x1f481;&#x1f3fb;&#x200d;&#x2642;&#xfe0f;</span>
+                            {opt.label ?? opt.scale}
+                        </a>
+                    );
+                })}
+            </StyledMenu>
+        :
+            <></>    
     );
 }
