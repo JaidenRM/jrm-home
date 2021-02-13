@@ -6,16 +6,14 @@ export const MyHamburgerMenu = () => {
     //hooks
     const [isOpen, setIsOpen] = useState(false);
 
+    //components
+    const controller = <MyHamburger isOpen={isOpen} setIsOpen={setIsOpen} />;
+
     //render
     return (
-        <>
-            <MyHamburger 
-                isOpen={isOpen} 
-                setIsOpen={setIsOpen}
-            />
-            <MySideMenu 
-                isOpen={isOpen}
-            />
-        </>
+        <MySideMenu 
+            isOpen={isOpen}
+            controller={controller}
+        />
     );
 }
