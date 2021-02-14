@@ -1,6 +1,5 @@
 import React from "react";
 import { PieChart } from "react-minimal-pie-chart";
-import { DataEntry } from "react-minimal-pie-chart/types/commonTypes";
 import styled from "styled-components";
 import { PIE_CHART_DATA as PieChartData } from "../constants/testData"
 import { WheelMenuOption } from "../models/WheelMenuOption";
@@ -57,7 +56,6 @@ export const MyWheelMenu = (props: IWheelMenuProps) => {
                 labelPosition={100 - lineWidth/2}
                 startAngle={320}
                 lineWidth={lineWidth}
-                style={{position: "relative", zIndex: -30, backgroundColor: 'rgba(0,0,0,0)'}}
             />
         </StyledDiv>
     );

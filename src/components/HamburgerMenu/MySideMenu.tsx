@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { WheelMenuOption } from '../../models/WheelMenuOption';
+import { HAMBURGER_BASE_REM_SIZE } from '../../constants/uiConstants';
 
 const StyledMenu = styled.nav`
     display: flex;
@@ -16,7 +17,7 @@ const StyledMenu = styled.nav`
     transform: translate(-50%, -50%);
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
-        width: 100%;
+        width: 100vw;
     }
 
     a {
@@ -40,9 +41,33 @@ const StyledMenu = styled.nav`
     }
 `;
 
+const PositionHamburger = styled.div<IMenuProps>`
+    position: absolute;
+    left: ${ 
+        props => props.isOpen ? 
+            `-${HAMBURGER_BASE_REM_SIZE * props.controllerSize / 2 + 1}rem` :
+            `calc(50% - ${HAMBURGER_BASE_REM_SIZE / 2}rem)`
+    };
+    top: calc(50% - ${HAMBURGER_BASE_REM_SIZE / 2}rem);
+
+    ${props => props.isOpen ? 
+        `@media (max-width: ${props.theme.mobile}) {
+            top: ${props.controllerSize * HAMBURGER_BASE_REM_SIZE / 4 + 1}rem;
+            left: 50%;
+
+            div {
+                background-color: ${props.theme.primaryLight};
+            }
+        }`    
+        : ''
+    }
+`;
+
 interface IMenuProps {
     isOpen: boolean,
-    menuOptions: WheelMenuOption[]
+    menuOptions: WheelMenuOption[],
+    menuController: React.ReactNode,
+    controllerSize: number
 }
 
 export const MySideMenu = (props: IMenuProps) => {    
@@ -58,8 +83,13 @@ export const MySideMenu = (props: IMenuProps) => {
                         </a>
                     );
                 })}
+                <PositionHamburger {...props}>
+                    {props.menuController}
+                </PositionHamburger>
             </StyledMenu>
         :
-            <></>    
+            <PositionHamburger {...props}>
+                {props.menuController}
+            </PositionHamburger>   
     );
 }

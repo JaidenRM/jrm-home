@@ -1,0 +1,1 @@
+export const HAMBURGER_BASE_REM_SIZE = 2;
