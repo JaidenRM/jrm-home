@@ -5,23 +5,35 @@ interface DataEntry {
     title?: string | number;
 };
 
-export class WheelMenuOption {
+export interface IWheelMenuOption {
+    key?: string | number;
+    label?: string | number;
+    scale?: number;
+    colour: string;
+    onOuterWheel: boolean;
+    url?: string;
+    icon?: string;
+}
+
+export class WheelMenuOption implements IWheelMenuOption {
     key?: string | number;
     label?: string | number;
     scale: number = 1;
     colour: string;
     onOuterWheel: boolean;
+    url?: string;
+    icon?: string;
 
     constructor(
-        colour: string, onOuterWheel: boolean,
-        label?: string | number, key?: string | number,
-        scale?: number
+        option: IWheelMenuOption
     ) {
-        this.scale = scale || this.scale; //0 also shouldn't be considered hence the '||' instead of '??'
-        this.colour = colour;
-        this.onOuterWheel = onOuterWheel;
-        this.key = key;
-        this.label = label;
+        this.scale = option.scale || this.scale; //0 also shouldn't be considered hence the '||' instead of '??'
+        this.colour = option.colour;
+        this.onOuterWheel = option.onOuterWheel;
+        this.key = option.key;
+        this.label = option.label;
+        this.url = option.url;
+        this.icon = option.icon;
     }
 
     ToDataEntry(): DataEntry {
