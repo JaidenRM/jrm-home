@@ -38,16 +38,41 @@ const StyledDiv = styled.div`
     }
 `;
 
-interface IOption {
-    option: WheelMenuOption
-    key: string
+function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
+    var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
+  
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+}
+
+function describeArc(x: number, y: number, radius: number, startAngle: number, endAngle: number): string {
+
+    var start = polarToCartesian(x, y, radius, startAngle);
+    var end = polarToCartesian(x, y, radius, endAngle);
+
+    var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+    var d = [
+        "M", start.x, start.y, 
+        "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y
+    ].join(" ");
+
+    return d;       
 }
 
 function GenerateTextSvg(label: LabelRenderProps, data: WheelMenuOption) {
+    const path: string = describeArc(label.x, label.y, 50, label.dataEntry.startAngle - 30, label.dataEntry.startAngle + label.dataEntry.degrees - 30);
     return (
-        <text {...label}>
-            <a href={data.url} target="_blank" rel="noreferrer">{data.label}</a>
-        </text>     
+        <svg overflow="visible">
+            <path fill="none" stroke="transparent" d={path} id={label.dataIndex.toString()}/>
+            <text>
+                <textPath href={`#${label.dataIndex}`} startOffset={50} textAnchor="middle">
+                    <a href={data.url} target="_blank" rel="noreferrer">{data.label}</a>
+                </textPath>
+            </text>  
+        </svg>   
     );
 }
 
@@ -65,11 +90,11 @@ export const MyWheelMenu = (props: IWheelMenuProps) => {
                 label={label => GenerateTextSvg(label, pieOptions[label.dataIndex])}
                 labelStyle={{ fontSize: 3 }}
                 labelPosition={100 - lineWidth/2}
-                startAngle={320}
+                startAngle={0}
                 lineWidth={lineWidth}
-                rounded={true}
+                rounded
                 paddingAngle={10}
-                animate={true}
+                animate
                 onClick={(e, i) => {
                     if(pieOptions[i].url) 
                         window.open(pieOptions[i].url, '_blank');
