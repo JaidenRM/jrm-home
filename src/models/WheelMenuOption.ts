@@ -11,6 +11,7 @@ export interface IWheelMenuOption {
     scale?: number;
     colour: string;
     onOuterWheel: boolean;
+    isHovered?: boolean;
     url?: string;
     icon?: string;
 }
@@ -21,6 +22,7 @@ export class WheelMenuOption implements IWheelMenuOption {
     scale: number = 1;
     colour: string;
     onOuterWheel: boolean;
+    isHovered: boolean;
     url?: string;
     icon?: string;
 
@@ -34,6 +36,7 @@ export class WheelMenuOption implements IWheelMenuOption {
         this.label = option.label;
         this.url = option.url;
         this.icon = option.icon;
+        this.isHovered = option.isHovered || false
     }
 
     ToDataEntry(): DataEntry {

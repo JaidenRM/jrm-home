@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
 import { LabelRenderProps } from "react-minimal-pie-chart/types/Label";
 import styled from "styled-components";
 import { PIE_CHART_DATA as PieChartData } from "../constants/testData"
 import { WheelMenuOption } from "../models/WheelMenuOption";
+import { describeArc } from "../utils/pathUtils";
 import { MyHamburgerMenu } from "./HamburgerMenu/MyHamburgerMenu";
 
 /********************************************************
@@ -18,91 +19,89 @@ import { MyHamburgerMenu } from "./HamburgerMenu/MyHamburgerMenu";
 interface IWheelMenuProps {
     options: WheelMenuOption[],
     innerHoleCoverage: number,
+    radius: number
 }
 
 const defaultProps: IWheelMenuProps = {
     options: PieChartData,
     innerHoleCoverage: 50,
+    radius: 350
 }
 
-const StyledDiv = styled.div`
-    position: relative;
-
-    .center-me {
-        position: absolute;
-        top: calc(50% - 1rem);
-        left: calc(50% - 3rem);
-        padding-top: 0%;
-        text-align: center;
-        font-size: 13px;
-    }
+const SvgDiv = styled.div<IWheelMenuProps>`
+    height: ${({radius}) => radius * 2.4}px;
+    width: ${({radius}) => radius * 2.4}px;
+    padding: ${({radius}) => radius * 0.2}px;
 `;
 
-function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
-    var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
-  
-    return {
-      x: centerX + (radius * Math.cos(angleInRadians)),
-      y: centerY + (radius * Math.sin(angleInRadians))
-    };
-}
+function GenerateTextSvg(label: LabelRenderProps, data: WheelMenuOption, radius: number) {
+    const path: string = describeArc(
+        label.x,
+        label.y,
+        radius * (data.isHovered ? 1.2 : 1),
+        label.dataEntry.startAngle,
+        label.dataEntry.startAngle + label.dataEntry.degrees
+    );
 
-function describeArc(x: number, y: number, radius: number, startAngle: number, endAngle: number): string {
-
-    var start = polarToCartesian(x, y, radius, startAngle);
-    var end = polarToCartesian(x, y, radius, endAngle);
-
-    var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-    var d = [
-        "M", start.x, start.y, 
-        "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y
-    ].join(" ");
-
-    return d;       
-}
-
-function GenerateTextSvg(label: LabelRenderProps, data: WheelMenuOption) {
-    const path: string = describeArc(label.x, label.y, 50, label.dataEntry.startAngle - 30, label.dataEntry.startAngle + label.dataEntry.degrees - 30);
     return (
         <svg overflow="visible">
             <path fill="none" stroke="transparent" d={path} id={label.dataIndex.toString()}/>
             <text>
-                <textPath href={`#${label.dataIndex}`} startOffset={50} textAnchor="middle">
+                <textPath href={`#${label.dataIndex}`} startOffset="50%" textAnchor="middle">
                     <a href={data.url} target="_blank" rel="noreferrer">{data.label}</a>
                 </textPath>
-            </text>  
-        </svg>   
+            </text>
+        </svg>
     );
 }
 
 export const MyWheelMenu = (props: IWheelMenuProps) => {
+    //Just care about updating the state for the re-render 
+    //eslint-disable-next-line
+    const [isHovered, setIsHovered] = useState(false);
+
     const lineWidth: number = Math.max(100 - props.innerHoleCoverage, 0);
     const pieOptions = props.options.filter(opt => opt.onOuterWheel);
 
     return (
-        <StyledDiv>
+        <SvgDiv {...props}>
+            {/* pass 50% value here so we can calculate the actual center as a property 
+                 WIP!!!!
+            */}
             <MyHamburgerMenu
-                options={props.options.filter(opt => !opt.onOuterWheel)}            
+                options={props.options.filter(opt => !opt.onOuterWheel)}
+                customSizePx={[props.radius, props.radius]}
             />
             <PieChart
                 data={pieOptions.map(opt => opt.ToDataEntry())}
-                label={label => GenerateTextSvg(label, pieOptions[label.dataIndex])}
+                label={label => GenerateTextSvg(label, pieOptions[label.dataIndex], props.radius)}
                 labelStyle={{ fontSize: 3 }}
                 labelPosition={100 - lineWidth/2}
-                startAngle={0}
+                startAngle={270}
                 lineWidth={lineWidth}
-                rounded
                 paddingAngle={10}
+                radius={props.radius}
+                rounded
                 animate
                 onClick={(e, i) => {
-                    if(pieOptions[i].url) 
+                    if(pieOptions[i].url)
                         window.open(pieOptions[i].url, '_blank');
                 }}
-                onMouseOver={ (e, i) => e.currentTarget.setAttribute('opacity', pieOptions[i].url ? '0.5' : '1') }
-                onMouseOut={ (e, i) => e.currentTarget.setAttribute('opacity', '1') }
+                onMouseOver={ (e, i) => {
+                    e.currentTarget.setAttribute('opacity', pieOptions[i].url ? '0.5' : '1');
+                    pieOptions[i].isHovered = true;
+                    setIsHovered(true);
+                }}
+                onMouseOut={ (e, i) => {
+                    e.currentTarget.setAttribute('opacity', '1');
+                    pieOptions[i].isHovered = false;
+                    setIsHovered(false);
+                }}
+                style={{overflow: "visible"}}
+                viewBoxSize={[props.radius * 2, props.radius * 2]}
+                center={[props.radius, props.radius]}
             />
-        </StyledDiv>
+        </SvgDiv>
     );
 }
 

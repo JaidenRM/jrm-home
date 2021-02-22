@@ -4,7 +4,8 @@ import { MyHamburger } from './MyHamburger';
 import { MySideMenu } from './MySideMenu';
 
 interface IMenuProps {
-    options: WheelMenuOption[]
+    options: WheelMenuOption[],
+    customSizePx?: [number, number]
 }
 
 export const MyHamburgerMenu = (props: IMenuProps) => {
@@ -27,6 +28,7 @@ export const MyHamburgerMenu = (props: IMenuProps) => {
             menuOptions={props.options}
             menuController={controller}
             controllerSize={size}
+            customSizePx={props.customSizePx}
         />
     );
 }

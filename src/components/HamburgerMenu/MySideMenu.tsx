@@ -2,19 +2,23 @@ import styled from 'styled-components';
 import { WheelMenuOption } from '../../models/WheelMenuOption';
 import { HAMBURGER_BASE_REM_SIZE } from '../../constants/uiConstants';
 
-const StyledMenu = styled.nav`
+const StyledMenu = styled.nav<IMenuProps>`
+    position: absolute;
+    left: 50%;
+    top: ${ ({ customSizePx }) => customSizePx ? `${customSizePx[0] * 0.2}px` : '0px'};
+    transition: transform 0.3s ease-in-out;
+    transform: translate('50%, 50%');
+`;
+
+const StyledInnerMenu = styled.nav<IMenuProps>`
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: ${({ theme }) => theme.primaryDark};
-    height: 100vh;
     text-align: left;
     padding: 2rem;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transition: transform 0.3s ease-in-out;
-    transform: translate(-50%, -50%);
+    background: ${({ theme }) => theme.primaryDark};
+    height: ${ ({ customSizePx }) => customSizePx ? `${customSizePx[0] * 2}px` : '100vh' };
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
         width: 100vw;
@@ -42,13 +46,13 @@ const StyledMenu = styled.nav`
 `;
 
 const PositionHamburger = styled.div<IMenuProps>`
-    position: absolute;
+    position: ${props => props.isOpen ? 'absolute' : 'relative' };
     left: ${ 
         props => props.isOpen ? 
             `-${HAMBURGER_BASE_REM_SIZE * props.controllerSize / 2 + 1}rem` :
-            `calc(50% - ${HAMBURGER_BASE_REM_SIZE / 2}rem)`
+            `calc(${props.customSizePx ? `${props.customSizePx[1]}px` : '50%'} - ${HAMBURGER_BASE_REM_SIZE / 2}rem)`
     };
-    top: calc(50% - ${HAMBURGER_BASE_REM_SIZE / 2}rem);
+    top: ${({customSizePx}) => customSizePx ? `${customSizePx[0]}px` : '50%'};
 
     ${props => props.isOpen ? 
         `@media (max-width: ${props.theme.mobile}) {
@@ -67,7 +71,8 @@ interface IMenuProps {
     isOpen: boolean,
     menuOptions: WheelMenuOption[],
     menuController: React.ReactNode,
-    controllerSize: number
+    controllerSize: number,
+    customSizePx?: [number, number]
 }
 
 export const MySideMenu = (props: IMenuProps) => {    
@@ -75,14 +80,16 @@ export const MySideMenu = (props: IMenuProps) => {
         props.isOpen 
         ? 
             <StyledMenu {...props}>
-                {props.menuOptions.map(opt => {
-                    return (
-                        <a href="/">
-                            <span role="img" aria-label="about us">&#x1f481;&#x1f3fb;&#x200d;&#x2642;&#xfe0f;</span>
-                            {opt.label ?? opt.scale}
-                        </a>
-                    );
-                })}
+                <StyledInnerMenu {...props}>
+                    {props.menuOptions.map(opt => {
+                        return (
+                            <a href="/">
+                                <span role="img" aria-label="about us">&#x1f481;&#x1f3fb;&#x200d;&#x2642;&#xfe0f;</span>
+                                {opt.label ?? opt.scale}
+                            </a>
+                        );
+                    })}
+                </StyledInnerMenu>
                 <PositionHamburger {...props}>
                     {props.menuController}
                 </PositionHamburger>
