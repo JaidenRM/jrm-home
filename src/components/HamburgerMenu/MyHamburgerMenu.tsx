@@ -5,7 +5,8 @@ import { MySideMenu } from './MySideMenu';
 
 interface IMenuProps {
     options: WheelMenuOption[],
-    customSizePx?: [number, number]
+    customSizePx?: [number, number],
+    hamburgerSize: number,
 }
 
 export const MyHamburgerMenu = (props: IMenuProps) => {
@@ -13,12 +14,11 @@ export const MyHamburgerMenu = (props: IMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     //internal vars
-    const size = 4;
     const controller = 
         <MyHamburger
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            size={size}
+            size={props.hamburgerSize}
         />;
 
     //render
@@ -27,7 +27,7 @@ export const MyHamburgerMenu = (props: IMenuProps) => {
             isOpen={isOpen}
             menuOptions={props.options}
             menuController={controller}
-            controllerSize={size}
+            controllerSize={props.hamburgerSize}
             customSizePx={props.customSizePx}
         />
     );

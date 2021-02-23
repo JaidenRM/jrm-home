@@ -5,16 +5,22 @@ import { HAMBURGER_BASE_REM_SIZE } from '../../constants/uiConstants';
 const StyledMenu = styled.nav<IMenuProps>`
     position: absolute;
     left: 50%;
-    top: ${ ({ customSizePx }) => customSizePx ? `${customSizePx[0] * 0.2}px` : '0px'};
     transition: transform 0.3s ease-in-out;
     transform: translate('50%, 50%');
+    background: ${({ theme }) => theme.primaryDark};
+    
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+        width: 100vw;
+        height: 100vh;
+        left: 0%;
+        top: 0%;
+    }
 `;
 
-const StyledInnerMenu = styled.nav<IMenuProps>`
+const StyledInnerMenu = styled.div<IMenuProps>`
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     text-align: left;
     padding: 2rem;
     background: ${({ theme }) => theme.primaryDark};
@@ -22,6 +28,8 @@ const StyledInnerMenu = styled.nav<IMenuProps>`
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
         width: 100vw;
+        height: calc(100vh - ${({ controllerSize }) => controllerSize * 2}rem);
+        margin-top: ${({ controllerSize }) => controllerSize * 2}rem;
     }
 
     a {
