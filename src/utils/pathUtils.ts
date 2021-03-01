@@ -26,3 +26,13 @@ export function describeArc(x: number, y: number, radius: number, startAngle: nu
 
     return d;       
 }
+
+export function largestSquareInCircle(diameter: number): number {
+    return diameter / Math.sqrt(2);
+}
+
+export function largestTextSizeOnSegment(radius: number, segments: number, characters: number) {
+    const circumference = 2 * Math.PI * radius;
+    console.log(circumference / (segments * characters));
+    return circumference * 2 / (segments * characters);
+}
