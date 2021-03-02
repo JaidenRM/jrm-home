@@ -3,17 +3,16 @@ import { WheelMenuOption } from '../../models/WheelMenuOption';
 import { HAMBURGER_BASE_REM_SIZE } from '../../constants/uiConstants';
 
 const StyledMenu = styled.nav<IMenuProps>`
-    position: absolute;
-    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    left: 0%;
+    top: 0%;
+    position: fixed;
     transition: transform 0.3s ease-in-out;
-    transform: translate('50%, 50%');
     background: ${({ theme }) => theme.primaryDark};
     
     @media (max-width: ${({ theme }) => theme.mobile}) {
-        width: 100vw;
-        height: 100vh;
-        left: 0%;
-        top: 0%;
+        
     }
 `;
 
@@ -23,13 +22,13 @@ const StyledInnerMenu = styled.div<IMenuProps>`
     flex-direction: column;
     text-align: left;
     padding: 2rem;
+    width: 100vw;
+    height: calc(100vh - ${({ controllerSize }) => controllerSize * 2}rem);
+    margin-top: ${({ controllerSize }) => controllerSize * 2}rem;
     background: ${({ theme }) => theme.primaryDark};
-    height: ${ ({ customSizePx }) => customSizePx ? `${customSizePx[0] * 2}px` : '100vh' };
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
-        width: 100vw;
-        height: calc(100vh - ${({ controllerSize }) => controllerSize * 2}rem);
-        margin-top: ${({ controllerSize }) => controllerSize * 2}rem;
+        
     }
 
     a {
@@ -41,10 +40,10 @@ const StyledInnerMenu = styled.div<IMenuProps>`
         color: ${({ theme }) => theme.primaryLight};
         text-decoration: none;
         transition: color 0.3s linear;
+        text-align: center;
         
         @media (max-width: ${({ theme }) => theme.mobile}) {
             font-size: 1.5rem;
-            text-align: center;
         }
 
         &:hover {
@@ -57,10 +56,15 @@ const PositionHamburger = styled.div<IMenuProps>`
     position: ${props => props.isOpen ? 'absolute' : 'relative' };
     left: ${ 
         props => props.isOpen ? 
-            `-${HAMBURGER_BASE_REM_SIZE * props.controllerSize / 2 + 1}rem` :
+            '50%' :
             `calc(${props.customSizePx ? `${props.customSizePx[1]}px` : '50%'} - ${HAMBURGER_BASE_REM_SIZE / 2}rem)`
     };
-    top: ${({customSizePx}) => customSizePx ? `${customSizePx[0]}px` : '50%'};
+    bottom: ${({customSizePx, isOpen}) => isOpen ? '' : (customSizePx ? `${customSizePx[0]}px` : '50%')};
+    top: ${({controllerSize, isOpen}) => isOpen ? `${controllerSize * HAMBURGER_BASE_REM_SIZE / 4 + 1}rem` : ''};
+
+    div {
+        background-color: ${({theme, isOpen}) => isOpen ? theme.primaryLight : theme.primaryDark};
+    }
 
     ${props => props.isOpen ? 
         `@media (max-width: ${props.theme.mobile}) {

@@ -11,10 +11,6 @@ function App() {
     <ThemeProvider theme={Theme}>
       <>
         <GlobalStyles/>
-        {/* <MyWheelMenu
-          innerHoleCoverage={70}
-          options={MENU_OPTIONS}
-        /> */}
         <MyResponsiveWheelMenu
           innerHoleCoverage={70}
           options={MENU_OPTIONS}

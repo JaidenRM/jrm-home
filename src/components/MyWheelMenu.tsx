@@ -75,11 +75,7 @@ export const MyWheelMenu = (props: IWheelMenuProps) => {
             {/* pass 50% value here so we can calculate the actual center as a property 
                  WIP!!!!
             */}
-            <MyHamburgerMenu
-                options={props.options.filter(opt => !opt.onOuterWheel)}
-                customSizePx={[props.radius, props.radius]}
-                hamburgerSize={props.hamburgerSize}
-            />
+            
             <PieChart
                 data={pieOptions.map(opt => opt.ToDataEntry())}
                 label={label => GenerateTextSvg(label, pieOptions[label.dataIndex], props.radius, props.textStyling)}
@@ -109,6 +105,11 @@ export const MyWheelMenu = (props: IWheelMenuProps) => {
                 style={{overflow: "visible"}}
                 viewBoxSize={[props.radius * 2, props.radius * 2]}
                 center={[props.radius, props.radius]}
+            />
+            <MyHamburgerMenu
+                options={props.options.filter(opt => !opt.onOuterWheel)}
+                customSizePx={[props.radius, props.radius]}
+                hamburgerSize={props.hamburgerSize}
             />
         </SvgDiv>
     );
