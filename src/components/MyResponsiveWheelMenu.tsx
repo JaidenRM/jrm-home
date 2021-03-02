@@ -15,12 +15,15 @@ interface IResponsiveProps {
     options: WheelMenuOption[],
     innerHoleCoverage: number,
     maxHamburgerSize: number,
+    //could change to [number, number] for multiple options based on screen size
+    fitXCharacters: number, 
 }
 
 const defaultProps: IResponsiveProps = {
     innerHoleCoverage: 50,
     options: [],
     maxHamburgerSize: Number.MAX_SAFE_INTEGER,
+    fitXCharacters: 15
 }
 //TODO: HAMBURGER DIV BEING FIRST THROWS SVG OFF CENTER POSITION!!!
 export const MyResponsiveWheelMenu = (props: IResponsiveProps) => {
@@ -30,7 +33,7 @@ export const MyResponsiveWheelMenu = (props: IResponsiveProps) => {
     squareLength = squareLength > props.maxHamburgerSize ? props.maxHamburgerSize : squareLength;
 
     const cssProps: CSSProperties = {
-        fontSize: largestTextSizeOnSegment(radius, 3, 15)
+        fontSize: largestTextSizeOnSegment(radius, 3, props.fitXCharacters)
     }
 
     return (

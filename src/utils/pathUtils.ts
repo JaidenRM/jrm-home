@@ -1,3 +1,5 @@
+import { FONT_HEIGHT_TO_WIDTH } from "../constants/uiConstants";
+
 interface IAngle {
     x: number,
     y: number
@@ -33,6 +35,8 @@ export function largestSquareInCircle(diameter: number): number {
 
 export function largestTextSizeOnSegment(radius: number, segments: number, characters: number) {
     const circumference = 2 * Math.PI * radius;
-    console.log(circumference / (segments * characters));
-    return circumference * 2 / (segments * characters);
+    const characterSize = circumference / (segments * characters);
+
+    //font-size is indicative of height so we can convert to width value with this approx. version ~60%
+    return characterSize * FONT_HEIGHT_TO_WIDTH;
 }
