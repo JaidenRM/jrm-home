@@ -8,6 +8,7 @@ const StyledMenu = styled.nav<IMenuProps>`
     left: 0%;
     top: 0%;
     position: fixed;
+    -webkit-backface-visibility: hidden;
     transition: transform 0.3s ease-in-out;
     background: ${({ theme }) => theme.primaryDark};
     
@@ -53,14 +54,13 @@ const StyledInnerMenu = styled.div<IMenuProps>`
 `;
 
 const PositionHamburger = styled.div<IMenuProps>`
-    position: ${props => props.isOpen ? 'absolute' : 'relative' };
+    position: relative;
     left: ${ 
         props => props.isOpen ? 
-            '50%' :
+            `calc(50% + ${props.controllerSize * 0.1}rem)` :
             `calc(${props.customSizePx ? `${props.customSizePx[1]}px` : '50%'} - ${HAMBURGER_BASE_REM_SIZE / 2}rem)`
     };
-    bottom: ${({customSizePx, isOpen}) => isOpen ? '' : (customSizePx ? `${customSizePx[0]}px` : '50%')};
-    top: ${({controllerSize, isOpen}) => isOpen ? `${controllerSize * HAMBURGER_BASE_REM_SIZE / 4 + 1}rem` : ''};
+    bottom: ${({customSizePx, isOpen, controllerSize}) => isOpen ? `calc(100% - ${controllerSize}rem)` : (customSizePx ? `calc(${customSizePx[0]}px + ${HAMBURGER_BASE_REM_SIZE / 2}rem)` : '50%')};
 
     div {
         background-color: ${({theme, isOpen}) => isOpen ? theme.primaryLight : theme.primaryDark};
@@ -68,12 +68,7 @@ const PositionHamburger = styled.div<IMenuProps>`
 
     ${props => props.isOpen ? 
         `@media (max-width: ${props.theme.mobile}) {
-            top: ${props.controllerSize * HAMBURGER_BASE_REM_SIZE / 4 + 1}rem;
-            left: 50%;
-
-            div {
-                background-color: ${props.theme.primaryLight};
-            }
+            
         }`    
         : ''
     }
